@@ -1,4 +1,4 @@
-module github.com/long250038728/micro-kit.git
+module github.com/long250038728/micro-kit
 
 go 1.16
 
