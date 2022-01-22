@@ -11,7 +11,7 @@ import (
 	"sync"
 )
 
-func NewDiscoverClient(consulUrl string, consulPort int) (Discover, error) {
+func NewDiscoverClient(consulUrl string, consulPort int) (*Client, error) {
 	consulConfig := api.DefaultConfig()
 	consulConfig.Address = consulUrl + ":" + strconv.Itoa(consulPort)
 
