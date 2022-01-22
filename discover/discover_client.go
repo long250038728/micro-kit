@@ -72,7 +72,7 @@ func (discoverClient *Client) Register(serviceName string, instanceHost string, 
 
 	healthFullUrl := instanceHost + ":" + strconv.Itoa(instancePort) + healthUrl
 	if discoverType == DiscoverTypeHTTP{
-		serviceRegistration.Check.HTTP = healthFullUrl
+		serviceRegistration.Check.HTTP = "http://" + healthFullUrl
 	}else {
 		serviceRegistration.Check.GRPC = healthFullUrl
 	}
