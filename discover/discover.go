@@ -16,3 +16,8 @@ package discover
 //	// DiscoverServices 获取该服务名对应的列表
 //	DiscoverServices()[]interface{}
 //}
+
+const (
+	DiscoverTypeHTTP = iota
+	DiscoverTypeGRPC
+)

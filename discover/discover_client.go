@@ -10,7 +10,6 @@ import (
 	"strconv"
 	"sync"
 )
-
 func NewDiscoverClient(consulUrl string, consulPort int) (*Client, error) {
 	consulConfig := api.DefaultConfig()
 	consulConfig.Address = consulUrl + ":" + strconv.Itoa(consulPort)
@@ -48,7 +47,7 @@ type Client struct {
 
 //Register 服务注册
 // 传入服务名、端口号等参数进行服务注册 （由于consul在init初始化的时候就已经创建consul对象）
-func (discoverClient *Client) Register(serviceName string, instanceHost string, instancePort int, mete map[string]string, healthUrl string)bool{
+func (discoverClient *Client) Register(serviceName string, instanceHost string, instancePort int, healthUrl string,discoverType int)bool{
 	instanceId := serviceName + "-" +  uuid.NewV4().String()
 	serviceInfo := dto.ServiceInfo{
 		ServiceName: serviceName,
@@ -65,12 +64,17 @@ func (discoverClient *Client) Register(serviceName string, instanceHost string, 
 		Name: serviceName,
 		Address: instanceHost,
 		Port: instancePort,
-		Meta: mete,
 		Check: &api.AgentServiceCheck{
 			DeregisterCriticalServiceAfter: "30s",
-			HTTP: "http://" + instanceHost + ":" + strconv.Itoa(instancePort) + healthUrl,
 			Interval: "15s",
 		},
+	}
+
+	healthFullUrl := instanceHost + ":" + strconv.Itoa(instancePort) + healthUrl
+	if discoverType == DiscoverTypeHTTP{
+		serviceRegistration.Check.HTTP = healthFullUrl
+	}else {
+		serviceRegistration.Check.GRPC = healthFullUrl
 	}
 
 	//将服务实例注册到consul中
